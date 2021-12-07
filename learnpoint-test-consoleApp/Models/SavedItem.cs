@@ -1,12 +1,13 @@
 ﻿using System;
 
-namespace EduDev.ClientLibrary.ApiModels
+namespace learnpoint_test_consoleApp.Models
 {
-    public class UserSource
+    public class SavedItem
     {
         public Guid Id { get; private set; }
-        public Guid UserId { get; set; }
+        public string Type { get; set; }
         public int ExternalId { get; set; }
         public string ExternalSource { get; set; }
+        public DateTime LastUpdated { get; set; }
     }
 }

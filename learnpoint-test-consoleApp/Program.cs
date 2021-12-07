@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using EduDev.ClientLibrary.ApiModels;
 using MvLpApi.ClientLibrary;
 using MvLpApi.ClientLibrary.ApiModels;
 using Newtonsoft.Json.Linq;
+using learnpoint_test_consoleApp.Models;
 
 namespace learnpoint_test_consoleApp
 {
@@ -63,7 +65,11 @@ namespace learnpoint_test_consoleApp
 
         private static void FillUsers(string accessToken)
         {
-            try
+
+            using (var context = new DataContext())
+            {
+
+                try
             {
                 
                 var studentsData = FetchStudentsData(accessToken);
@@ -72,8 +78,7 @@ namespace learnpoint_test_consoleApp
                 foreach (var student in studentsData.Students)
                 {
                     var user = new User()
-                    { 
-                        Id = Guid.NewGuid(), 
+                    {  
                         FirstName = student.FirstName, 
                         LastName = student.LastName, 
                         Email = student.Email 
@@ -81,14 +86,23 @@ namespace learnpoint_test_consoleApp
 
                     message = AddUser(user);
 
-                    var userSource = new UserSource()
-                    {
-                        UserId = user.Id, 
-                        ExternalId = student.Id, 
-                        ExternalSource = "Learnpoint"
-                    };
+                    var externalId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
 
-                    message = AddUserSource(userSource);
+                    
+
+                    
+
+                        var newItem = new SavedItem()
+                        {
+                            Type = "User",
+                            ExternalId = Convert.ToInt32(externalId),
+                            ExternalSource = "LearnPoint",
+                            LastUpdated = DateTime.Now
+                        };
+
+                        context.SavedItems.Add(newItem);
+                        context.SaveChanges();
+                   
 
                     Console.WriteLine($"Created: {message}");
                     Console.WriteLine($"Created: {message2}");
@@ -98,6 +112,8 @@ namespace learnpoint_test_consoleApp
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+            }
+
             }
         }
 
@@ -116,22 +132,13 @@ namespace learnpoint_test_consoleApp
                     {
                         var course = new Course()
                         {
-                            Id = Guid.NewGuid(),
                             Name = group.Name, 
                             CourseCode = group.Code, 
                             StartDate = group.LifespanFrom ?? DateTime.Now, 
                             EndDate = group.LifespanUntil ?? DateTime.Now 
                         };
 
-                        message = AddCourse(course);
 
-
-                        var courseSource = new UserSource()
-                        {
-                            UserId = course.Id,
-                            ExternalId = group.Id,
-                            ExternalSource = "Learnpoint"
-                        };
 
 
                         Console.WriteLine($"Created: {message}");
@@ -203,31 +210,6 @@ namespace learnpoint_test_consoleApp
 
             return response.Result;
         }
-
-        private static string AddUserSource(UserSource userSource)
-        {
-            var action = "api/usersource";
-            var request =
-                client.PostAsJsonAsync(action, userSource);
-
-            var response =
-                request.Result.Content.ReadAsStringAsync();
-
-            return response.Result;
-        }
-
-        private static string AddCourseSource(CourseSource courseSource)
-        {
-            var action = "api/coursesource";
-            var request =
-                client.PostAsJsonAsync(action, courseSource);
-
-            var response =
-                request.Result.Content.ReadAsStringAsync();
-
-            return response.Result;
-        }
-
 
     }
 }
