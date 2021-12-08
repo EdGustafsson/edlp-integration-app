@@ -10,12 +10,10 @@ namespace learnpoint_test_consoleApp.Models
         public string Type { get; set; }
         public ExternalId SourceId { get; set; }
         public ExternalId TargetId { get; set; }
-
         public DateTime LastUpdated { get; set; }
 
         public class ExternalId
         {
-            public Guid Id { get; set; }
             public int IntId { get; set; }
             public Guid GuidId { get; set; }
             public IdType IType { get; set; }

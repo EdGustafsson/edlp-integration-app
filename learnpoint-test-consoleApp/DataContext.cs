@@ -11,5 +11,11 @@ namespace learnpoint_test_consoleApp
         {
             optionsBuilder.UseSqlite(@"Data Source=EIADB.db");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Resource>().OwnsOne(p => p.SourceId);
+            modelBuilder.Entity<Resource>().OwnsOne(p => p.TargetId);
+        }
     }
 }
