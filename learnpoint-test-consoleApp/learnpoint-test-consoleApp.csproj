@@ -26,4 +26,8 @@
     <ProjectReference Include="..\MvLpApi.ClientLibrary\MvLpApi.ClientLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

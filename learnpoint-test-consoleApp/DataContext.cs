@@ -5,7 +5,7 @@ namespace learnpoint_test_consoleApp
 {
     public class DataContext : DbContext
     {
-        public DbSet<SavedItem> SavedItems { get; set; }
+        public DbSet<Resource> Resources { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
