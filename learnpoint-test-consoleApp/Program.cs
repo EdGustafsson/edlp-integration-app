@@ -7,9 +7,9 @@ using EduDev.ClientLibrary.ApiModels;
 using MvLpApi.ClientLibrary;
 using MvLpApi.ClientLibrary.ApiModels;
 using Newtonsoft.Json.Linq;
-using learnpoint_test_consoleApp.Models;
+using learnpoint_test_consoleApp.Entities;
+using learnpoint_test_consoleApp.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace learnpoint_test_consoleApp
 {
@@ -38,6 +38,11 @@ namespace learnpoint_test_consoleApp
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(media);
             var accessToken = DataRetrieval.GetAccessToken(tokenEndpointUri, clientId, clientSecret, requestedScopes);
+
+            var a = FetchStudentsData(accessToken);
+
+
+            FillUsers(accessToken);
 
 
         }
@@ -80,12 +85,17 @@ namespace learnpoint_test_consoleApp
 
                 foreach (var student in studentsData.Students)
                 {
-                    
 
-                        var foundUser = context.Resources.FirstOrDefault(u => u.SourceId.IntId == student.Id && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
+                        var findUsers = context.Resources.Where(u => u.Type == "User"
+                                                                        && u.SourceId.IntId == student.Id
+                                                                        && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
 
-                        if (foundUser != null)
+                       
+
+
+                        if (findUsers.OfType<Resource>().Any())
                         {
+
                             var user = new User()
                             {
                                 FirstName = student.FirstName,
@@ -93,20 +103,9 @@ namespace learnpoint_test_consoleApp
                                 Email = student.Email
                             };
 
-                            message = UpdateUser(user);
+                            message = AddUser(user);
 
-                            // Uppdatera?
-
-
-
-                            Console.WriteLine($"Created: {message}");
-                            Console.WriteLine($"Created: {message2}");
-                        }
-                        else
-                        {
                             var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
-
-
 
                             var newItem = new Resource()
                             {
@@ -132,11 +131,70 @@ namespace learnpoint_test_consoleApp
 
 
                             Console.WriteLine($"Created: {message}");
-                            Console.WriteLine($"Created: {message2}");
-                        }                
+
+                        }
+                        else
+                        {
+
+                            var localUser = context.Resources.FirstOrDefault(u => u.Type == "User"
+                                                                        && u.SourceId.IntId == student.Id
+                                                                        && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
+
+                            var user = new User()
+                            {
+                                FirstName = student.FirstName,
+                                LastName = student.LastName,
+                                Email = student.Email
+                            };
+
+                            User targetUser = GetUser(localUser.TargetId.GuidId);
+
+                            if (targetUser != null)
+                            {
+                                message = UpdateUser(targetUser.Id, user);
+
+
+                                Console.WriteLine($"Created: {message}");
+                            }
+                            else
+                            {
+
+                                message = AddUser(user);
+
+                                var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
+
+                                var newItem = new Resource()
+                                {
+                                    Id = localUser.Id,
+                                    Type = "User",
+                                    LastUpdated = DateTime.Now,
+                                    SourceId = new Resource.ExternalId()
+                                    {
+                                        IntId = student.Id,
+                                        IType = Resource.ExternalId.IdType.Int,
+                                        SType = Resource.ExternalId.SystemType.Learnpoint
+                                    },
+                                    TargetId = new Resource.ExternalId()
+                                    {
+                                        GuidId = Guid.Parse(sourceId),
+                                        IType = Resource.ExternalId.IdType.Guid,
+                                        SType = Resource.ExternalId.SystemType.EduApi
+                                    },
+                                };
+
+
+                                context.Entry(newItem).State = EntityState.Modified;
+
+
+
+                                Console.WriteLine($"Created: {message}");
+
+
+                            }
+                        }
+                    }
+                    Console.ReadLine();
                 }
-                Console.ReadLine();
-            }
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
@@ -158,30 +216,169 @@ namespace learnpoint_test_consoleApp
                     var groupsData = FetchGroupsData(accessToken);
                     var message = string.Empty;
                     var message2 = string.Empty;
+
                     foreach (var group in groupsData.Groups)
                     {
-                        if (group.Category.Name == "Skola")
+
+                        if (group.Category.Code == "CourseInstance")
                         {
-                            var course = new Course()
+
+                            var localGroup = context.Resources.FirstOrDefault(u => u.Type == "Course"
+                                                                            && u.SourceId.IntId == group.Id
+                                                                            && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
+
+                            if (localGroup == null)
                             {
-                                Name = group.Name,
-                                CourseCode = group.Code,
-                                StartDate = group.LifespanFrom ?? DateTime.Now,
-                                EndDate = group.LifespanUntil ?? DateTime.Now
+
+                                var course = new Course()
+                                {
+                                    Name = group.Name,
+                                    CourseCode = group.Code,
+                                    StartDate = group.LifespanFrom ?? DateTime.Now,
+                                    EndDate = group.LifespanUntil ?? DateTime.Now
+                                };
+
+                                message = AddCourse(course);
+
+                                var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
+
+                                var newItem = new Resource()
+                                {
+                                    Type = "Course",
+                                    LastUpdated = DateTime.Now,
+                                    SourceId = new Resource.ExternalId()
+                                    {
+                                        IntId = group.Id,
+                                        IType = Resource.ExternalId.IdType.Int,
+                                        SType = Resource.ExternalId.SystemType.Learnpoint
+                                    },
+                                    TargetId = new Resource.ExternalId()
+                                    {
+                                        GuidId = Guid.Parse(sourceId),
+                                        IType = Resource.ExternalId.IdType.Guid,
+                                        SType = Resource.ExternalId.SystemType.EduApi
+                                    },
+                                };
+
+
+                                context.Entry(newItem).State = EntityState.Added;
+
+
+
+                                Console.WriteLine($"Created: {message}");
+
+                            }
+                            else
+                            {
+
+                                var course = new Course()
+                                {
+                                    Name = group.Name,
+                                    CourseCode = group.Code,
+                                    StartDate = group.LifespanFrom ?? DateTime.Now,
+                                    EndDate = group.LifespanUntil ?? DateTime.Now
+                                };
+
+                                Course targetCourse = GetCourse(localGroup.TargetId.GuidId);
+
+                                if (targetCourse != null)
+                                {
+                                    message = UpdateCourse(targetCourse.Id, course);
+
+
+                                    Console.WriteLine($"Created: {message}");
+                                }
+                                else
+                                {
+
+                                    message = AddCourse(course);
+
+                                    var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
+
+                                    var newItem = new Resource()
+                                    {
+                                        Id = localGroup.Id,
+                                        Type = "Course",
+                                        LastUpdated = DateTime.Now,
+                                        SourceId = new Resource.ExternalId()
+                                        {
+                                            IntId = group.Id,
+                                            IType = Resource.ExternalId.IdType.Int,
+                                            SType = Resource.ExternalId.SystemType.Learnpoint
+                                        },
+                                        TargetId = new Resource.ExternalId()
+                                        {
+                                            GuidId = Guid.Parse(sourceId),
+                                            IType = Resource.ExternalId.IdType.Guid,
+                                            SType = Resource.ExternalId.SystemType.EduApi
+                                        },
+                                    };
+
+
+                                    context.Entry(newItem).State = EntityState.Modified;
+
+
+
+                                    Console.WriteLine($"Created: {message}");
+
+
+                                }
+                            }
+                        }
+                    }
+                    Console.ReadLine();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Error: {e.Message}");
+                }
+
+            }
+
+            
+        }
+
+        private static void FillStaffMembers(string accessToken)
+        {
+            using (var context = new DataContext())
+            {
+
+                try
+                {
+
+                    var staffMembersData = FetchStaffMembersData(accessToken);
+                    var message = string.Empty;
+                    var message2 = string.Empty;
+
+                    foreach (var staffMember in staffMembersData.StaffMembers)
+                    {
+
+
+                        var localUser = context.Resources.FirstOrDefault(u => u.Type == "User"
+                                                                        && u.SourceId.IntId == staffMember.Id
+                                                                        && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
+
+                        if (localUser == null)
+                        {
+
+                            var user = new User()
+                            {
+                                FirstName = staffMember.FirstName,
+                                LastName = staffMember.LastName,
+                                Email = staffMember.Email
                             };
 
-
-                            message = AddCourse(course);
+                            message = AddUser(user);
 
                             var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
 
                             var newItem = new Resource()
                             {
-                                Type = "Course",
+                                Type = "User",
                                 LastUpdated = DateTime.Now,
                                 SourceId = new Resource.ExternalId()
                                 {
-                                    IntId = group.Id,
+                                    IntId = staffMember.Id,
                                     IType = Resource.ExternalId.IdType.Int,
                                     SType = Resource.ExternalId.SystemType.Learnpoint
                                 },
@@ -196,13 +393,117 @@ namespace learnpoint_test_consoleApp
 
                             context.Entry(newItem).State = EntityState.Added;
 
+
+
                             Console.WriteLine($"Created: {message}");
+
                         }
+                        else
+                        {
+
+
+                            var user = new User()
+                            {
+                                FirstName = staffMember.FirstName,
+                                LastName = staffMember.LastName,
+                                Email = staffMember.Email
+                            };
+
+                            User targetUser = GetUser(localUser.TargetId.GuidId);
+
+                            if (targetUser != null)
+                            {
+                                message = UpdateUser(targetUser.Id, user);
+
+
+                                Console.WriteLine($"Created: {message}");
+                            }
+                            else
+                            {
+
+                                message = AddUser(user);
+
+                                var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
+
+                                var newItem = new Resource()
+                                {
+                                    Id = localUser.Id,
+                                    Type = "User",
+                                    LastUpdated = DateTime.Now,
+                                    SourceId = new Resource.ExternalId()
+                                    {
+                                        IntId = staffMember.Id,
+                                        IType = Resource.ExternalId.IdType.Int,
+                                        SType = Resource.ExternalId.SystemType.Learnpoint
+                                    },
+                                    TargetId = new Resource.ExternalId()
+                                    {
+                                        GuidId = Guid.Parse(sourceId),
+                                        IType = Resource.ExternalId.IdType.Guid,
+                                        SType = Resource.ExternalId.SystemType.EduApi
+                                    },
+                                };
+
+
+                                context.Entry(newItem).State = EntityState.Modified;
 
 
 
+                                Console.WriteLine($"Created: {message}");
+
+
+                            }
+                        }
                     }
                     Console.ReadLine();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Error: {e.Message}");
+                }
+
+            }
+
+           
+        }
+
+        private static void FillCourseMembership(string accessToken)
+        {
+            using (var context = new DataContext())
+            {
+                try
+                {
+                    var studentsData = FetchStudentsData(accessToken);
+                    var groupsData = FetchGroupsData(accessToken);
+
+
+                    foreach (var student in studentsData.Students)
+                    {
+
+                        var localUser = context.Resources.FirstOrDefault(u => u.Type == "User"
+                                                                            && u.SourceId.IntId == student.Id 
+                                                                            && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
+
+
+                        User targetUser = GetUser(localUser.TargetId.GuidId);
+
+                        foreach(var group in student.Groups)
+                        {
+                            var localCourse = context.Resources.FirstOrDefault(u => u.Type == "Course"
+                                                                                    && u.SourceId.IntId == student.Id 
+                                                                                    && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
+
+                            Course targetCourse = GetCourse(localCourse.TargetId.GuidId);
+
+                            CourseMembership newCourseMembership = new CourseMembership()
+                            {
+                                UserId = targetUser.Id,
+                                CourseId = targetCourse.Id,
+                               // EnrolledDate??
+
+                            };
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
@@ -211,64 +512,17 @@ namespace learnpoint_test_consoleApp
             }
         }
 
-        private static void FillStaffMembers(string accessToken)
+        private static User GetUser(Guid id)
         {
-            using (var context = new DataContext())
-            {
+            var action = $"api/course/findnumber/{id}";
+            var request =
+                client.GetAsync(action);
 
+            var response =
+                request.Result.Content.
+                ReadAsAsync<User>();
 
-                try
-                {
-
-                    var staffMembersData = FetchStaffMembersData(accessToken);
-                    var message = string.Empty;
-                    var message2 = string.Empty;
-                    foreach (var staffMember in staffMembersData.StaffMembers)
-                    {
-                        var user = new User()
-                        {
-                            FirstName = staffMember.FirstName,
-                            LastName = staffMember.LastName,
-                            Email = staffMember.Email
-                        };
-
-                        message = AddUser(user);
-
-                        var sourceId = JObject.Parse(message)["Id"].First()["Id"].Value<string>();
-
-                        var newItem = new Resource()
-                        {
-                            Type = "User",
-                            LastUpdated = DateTime.Now,
-                            SourceId = new Resource.ExternalId()
-                            {
-                                IntId = staffMember.Id,
-                                IType = Resource.ExternalId.IdType.Int,
-                                SType = Resource.ExternalId.SystemType.Learnpoint
-                            },
-                            TargetId = new Resource.ExternalId()
-                            {
-                                GuidId = Guid.Parse(sourceId),
-                                IType = Resource.ExternalId.IdType.Guid,
-                                SType = Resource.ExternalId.SystemType.EduApi
-                            },
-                        };
-
-                        context.Resources.Add(newItem);
-                        context.SaveChanges();
-
-
-
-                        Console.WriteLine($"Created: {message}");
-
-                    }
-                    Console.ReadLine();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Error: {e.Message}");
-                }
-            }
+            return response.Result;
         }
 
         private static string AddUser(User user)
@@ -282,14 +536,27 @@ namespace learnpoint_test_consoleApp
 
             return response.Result;
         }
-        private static string UpdateUser(User user)
+        private static string UpdateUser(Guid id, User user)
         {
-            var action = "api/user";
+            var action = $"api/user/{id}";
             var request =
                 client.PutAsJsonAsync(action, user);
 
             var response =
                 request.Result.Content.ReadAsStringAsync();
+
+            return response.Result;
+        }
+
+        private static Course GetCourse(Guid id)
+        {
+            var action = $"api/course/findnumber/{id}";
+            var request =
+                client.GetAsync(action);
+
+            var response =
+                request.Result.Content.
+                ReadAsAsync<Course>();
 
             return response.Result;
         }
@@ -306,5 +573,16 @@ namespace learnpoint_test_consoleApp
             return response.Result;
         }
 
+        private static string UpdateCourse(Guid id, Course course)
+        {
+            var action = $"api/course/{id}";
+            var request =
+                client.PutAsJsonAsync(action, course);
+
+            var response =
+                request.Result.Content.ReadAsStringAsync();
+
+            return response.Result;
+        }
     }
 }

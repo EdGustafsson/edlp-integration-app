@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-namespace learnpoint_test_consoleApp.Models
+namespace learnpoint_test_consoleApp.Entities
 {
+    [Table("Resource")]
     public class Resource
     {
         public Guid Id { get; set; }
@@ -12,6 +17,7 @@ namespace learnpoint_test_consoleApp.Models
         public ExternalId TargetId { get; set; }
         public DateTime LastUpdated { get; set; }
 
+        [Owned]
         public class ExternalId
         {
             public int IntId { get; set; }

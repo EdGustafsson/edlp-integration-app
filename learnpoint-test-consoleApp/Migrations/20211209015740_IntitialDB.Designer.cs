@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using learnpoint_test_consoleApp;
+using learnpoint_test_consoleApp.Data;
 
 namespace learnpoint_test_consoleApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211208091409_InitialDB")]
-    partial class InitialDB
+    [Migration("20211209015740_IntitialDB")]
+    partial class IntitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,7 +18,7 @@ namespace learnpoint_test_consoleApp.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.8");
 
-            modelBuilder.Entity("learnpoint_test_consoleApp.Models.Resource", b =>
+            modelBuilder.Entity("learnpoint_test_consoleApp.Entities.Resource", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,12 +32,12 @@ namespace learnpoint_test_consoleApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Resources");
+                    b.ToTable("Resource");
                 });
 
-            modelBuilder.Entity("learnpoint_test_consoleApp.Models.Resource", b =>
+            modelBuilder.Entity("learnpoint_test_consoleApp.Entities.Resource", b =>
                 {
-                    b.OwnsOne("learnpoint_test_consoleApp.Models.Resource+ExternalId", "SourceId", b1 =>
+                    b.OwnsOne("learnpoint_test_consoleApp.Entities.Resource+ExternalId", "SourceId", b1 =>
                         {
                             b1.Property<Guid>("ResourceId")
                                 .HasColumnType("TEXT");
@@ -56,13 +56,13 @@ namespace learnpoint_test_consoleApp.Migrations
 
                             b1.HasKey("ResourceId");
 
-                            b1.ToTable("Resources");
+                            b1.ToTable("Resource");
 
                             b1.WithOwner()
                                 .HasForeignKey("ResourceId");
                         });
 
-                    b.OwnsOne("learnpoint_test_consoleApp.Models.Resource+ExternalId", "TargetId", b1 =>
+                    b.OwnsOne("learnpoint_test_consoleApp.Entities.Resource+ExternalId", "TargetId", b1 =>
                         {
                             b1.Property<Guid>("ResourceId")
                                 .HasColumnType("TEXT");
@@ -81,7 +81,7 @@ namespace learnpoint_test_consoleApp.Migrations
 
                             b1.HasKey("ResourceId");
 
-                            b1.ToTable("Resources");
+                            b1.ToTable("Resource");
 
                             b1.WithOwner()
                                 .HasForeignKey("ResourceId");

@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace learnpoint_test_consoleApp.Migrations
 {
-    public partial class InitialDB : Migration
+    public partial class IntitialDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Resources",
+                name: "Resource",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -25,14 +25,14 @@ namespace learnpoint_test_consoleApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Resources", x => x.Id);
+                    table.PrimaryKey("PK_Resource", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Resources");
+                name: "Resource");
         }
     }
 }
