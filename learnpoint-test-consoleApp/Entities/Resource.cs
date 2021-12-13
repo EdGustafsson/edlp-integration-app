@@ -11,6 +11,7 @@ namespace learnpoint_test_consoleApp.Entities
     [Table("Resource")]
     public class Resource
     {
+        [Required]
         public Guid Id { get; set; }
         public string Type { get; set; }
         public ExternalId SourceId { get; set; }

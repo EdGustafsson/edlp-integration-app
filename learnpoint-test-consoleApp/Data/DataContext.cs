@@ -9,14 +9,16 @@ namespace learnpoint_test_consoleApp.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source=EIADB.db");
+            optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLOCALDB;Initial Catalog=testDB;MultipleActiveResultSets=False;Connection Timeout=30;Trusted_Connection=True");
         }
+
+        // Server=tcp:testservereg.database.windows.net,1433;Initial Catalog=testDB;Persist Security Info=False;User ID=eg;Password=1234567Aa;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<Resource>().OwnsOne(p => p.SourceId);
         //    modelBuilder.Entity<Resource>().OwnsOne(p => p.TargetId);
-        //}    
+        //}
 
     }
 }
