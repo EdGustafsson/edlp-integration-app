@@ -88,14 +88,14 @@ namespace learnpoint_test_consoleApp
                 foreach (var student in studentsData.Students)
                 {
 
-                        var findUsers = context.Resources.Where(u => u.Type == "User"
+                        var findUser = context.Resources.Where(u => u.Type == "User"
                                                                         && u.SourceId.IntId == student.Id
                                                                         && u.SourceId.SType == Resource.ExternalId.SystemType.Learnpoint);
 
 
 
 
-                        if (findUsers.OfType<Resource>().Any())
+                        if (findUser.OfType<Resource>().Any())
                         {
 
 
@@ -105,7 +105,6 @@ namespace learnpoint_test_consoleApp
 
                             var user = new User()
                             {
-                                Id = Guid.NewGuid(),
                                 FirstName = student.FirstName,
                                 LastName = student.LastName,
                                 Email = student.Email
@@ -128,9 +127,9 @@ namespace learnpoint_test_consoleApp
                                     message = AddUser(user);
 
 
-                                    //var container = JToken.Parse(message);
-                                    //Guid sourceId;
-                                    //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                                    var container = JToken.Parse(message);
+                                    Guid sourceId;
+                                    Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
                                     var newItem = new Resource()
                                     {
@@ -145,7 +144,7 @@ namespace learnpoint_test_consoleApp
                                         },
                                         TargetId = new Resource.ExternalId()
                                         {
-                                            GuidId = user.Id,
+                                            GuidId = sourceId,
                                             IType = Resource.ExternalId.IdType.Guid,
                                             SType = Resource.ExternalId.SystemType.EduApi
                                         },
@@ -169,7 +168,6 @@ namespace learnpoint_test_consoleApp
 
                             var user = new User()
                             {
-                                Id = Guid.NewGuid(),
                                 FirstName = student.FirstName,
                                 LastName = student.LastName,
                                 Email = student.Email
@@ -179,11 +177,11 @@ namespace learnpoint_test_consoleApp
 
 
 
-                            //var container = JToken.Parse(message);
-                            //Guid sourceId;
-                            //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                            var container = JToken.Parse(message);
+                            Guid sourceId;
+                            Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
-                                var newItem = new Resource()
+                            var newItem = new Resource()
                             {
                                 Id = Guid.NewGuid(),
                                 Type = "User",
@@ -257,7 +255,6 @@ namespace learnpoint_test_consoleApp
 
                                 var course = new Course()
                                 {
-                                    Id = Guid.NewGuid(),
                                     Name = group.Name,
                                     CourseCode = group.Code,
                                     StartDate = group.LifespanFrom ?? DateTime.Now,
@@ -281,9 +278,9 @@ namespace learnpoint_test_consoleApp
                                         message = AddCourse(course);
 
 
-                                        //var container = JToken.Parse(message);
-                                        //Guid sourceId;
-                                        //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                                        var container = JToken.Parse(message);
+                                        Guid sourceId;
+                                        Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
                                         var newItem = new Resource()
                                         {
@@ -298,7 +295,7 @@ namespace learnpoint_test_consoleApp
                                             },
                                             TargetId = new Resource.ExternalId()
                                             {
-                                                GuidId = course.Id,
+                                                GuidId = sourceId,
                                                 IType = Resource.ExternalId.IdType.Guid,
                                                 SType = Resource.ExternalId.SystemType.EduApi
                                             },
@@ -322,9 +319,9 @@ namespace learnpoint_test_consoleApp
                                     message = AddCourse(course);
 
 
-                                    //var container = JToken.Parse(message);
-                                    //Guid sourceId;
-                                    //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                                    var container = JToken.Parse(message);
+                                    Guid sourceId;
+                                    Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
                                     var newItem = new Resource()
                                     {
@@ -339,7 +336,7 @@ namespace learnpoint_test_consoleApp
                                         },
                                         TargetId = new Resource.ExternalId()
                                         {
-                                            GuidId = course.Id,
+                                            GuidId = sourceId,
                                             IType = Resource.ExternalId.IdType.Guid,
                                             SType = Resource.ExternalId.SystemType.EduApi
                                         },
@@ -362,7 +359,6 @@ namespace learnpoint_test_consoleApp
 
                                 var course = new Course()
                                 {
-                                    Id = Guid.NewGuid(),
                                     Name = group.Name,
                                     CourseCode = group.Code,
                                     StartDate = group.LifespanFrom ?? DateTime.Now,
@@ -372,9 +368,9 @@ namespace learnpoint_test_consoleApp
                                 message = AddCourse(course);
 
 
-                                //var container = JToken.Parse(message);
-                                //Guid sourceId;
-                                //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                                var container = JToken.Parse(message);
+                                Guid sourceId;
+                                Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
                                 var newItem = new Resource()
                                 {
@@ -388,7 +384,7 @@ namespace learnpoint_test_consoleApp
                                     },
                                     TargetId = new Resource.ExternalId()
                                     {
-                                        GuidId = course.Id,
+                                        GuidId = sourceId,
                                         IType = Resource.ExternalId.IdType.Guid,
                                         SType = Resource.ExternalId.SystemType.EduApi
                                     },
@@ -443,7 +439,6 @@ namespace learnpoint_test_consoleApp
 
                             var user = new User()
                             {
-                                Id = Guid.NewGuid(),
                                 FirstName = staffMember.FirstName,
                                 LastName = staffMember.LastName,
                                 Email = staffMember.Email
@@ -452,9 +447,9 @@ namespace learnpoint_test_consoleApp
                             message = AddUser(user);
 
 
-                            //var container = JToken.Parse(message);
-                            //Guid sourceId;
-                            //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                            var container = JToken.Parse(message);
+                            Guid sourceId;
+                            Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
                             var newItem = new Resource()
                             {
@@ -468,7 +463,7 @@ namespace learnpoint_test_consoleApp
                                 },
                                 TargetId = new Resource.ExternalId()
                                 {
-                                    GuidId = user.Id,
+                                    GuidId = sourceId,
                                     IType = Resource.ExternalId.IdType.Guid,
                                     SType = Resource.ExternalId.SystemType.EduApi
                                 },
@@ -488,7 +483,6 @@ namespace learnpoint_test_consoleApp
 
                             var user = new User()
                             {
-                                Id = Guid.NewGuid(),
                                 FirstName = staffMember.FirstName,
                                 LastName = staffMember.LastName,
                                 Email = staffMember.Email
@@ -509,9 +503,9 @@ namespace learnpoint_test_consoleApp
                                 message = AddUser(user);
 
 
-                                //var container = JToken.Parse(message);
-                                //Guid sourceId;
-                                //Guid.TryParse(container["guid"]?.ToString(), out sourceId);
+                                var container = JToken.Parse(message);
+                                Guid sourceId;
+                                Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
                                 var newItem = new Resource()
                                 {
@@ -526,7 +520,7 @@ namespace learnpoint_test_consoleApp
                                     },
                                     TargetId = new Resource.ExternalId()
                                     {
-                                        GuidId = user.Id,
+                                        GuidId = sourceId,
                                         IType = Resource.ExternalId.IdType.Guid,
                                         SType = Resource.ExternalId.SystemType.EduApi
                                     },
@@ -587,7 +581,6 @@ namespace learnpoint_test_consoleApp
 
                             CourseMembership newCourseMembership = new CourseMembership()
                             {
-                                Id = Guid.NewGuid(),
                                 UserId = targetUser.Id,
                                 CourseId = targetCourse.Id,
                                 EnrolledDate = targetCourse.StartDate
