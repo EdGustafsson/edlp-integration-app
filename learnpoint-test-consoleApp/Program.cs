@@ -131,27 +131,19 @@ namespace learnpoint_test_consoleApp
                                     Guid sourceId;
                                     Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
-                                    var newItem = new Resource()
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        Type = "User",
-                                        LastUpdated = DateTime.Now,
-                                        SourceId = new Resource.ExternalId()
-                                        {
-                                            IntId = student.Id,
-                                            IType = Resource.ExternalId.IdType.Int,
-                                            SType = Resource.ExternalId.SystemType.Learnpoint
-                                        },
-                                        TargetId = new Resource.ExternalId()
-                                        {
-                                            GuidId = sourceId,
-                                            IType = Resource.ExternalId.IdType.Guid,
-                                            SType = Resource.ExternalId.SystemType.EduApi
-                                        },
-                                    };
+                                    var item = context.Resources.Single(r => r.Id == localUser.Id);
 
+                                    item.LastUpdated = DateTime.Now;
+                                    item.SourceId.IntId = student.Id;
+                                    item.SourceId.IType = Resource.ExternalId.IdType.Int;
+                                    item.SourceId.SType = Resource.ExternalId.SystemType.Learnpoint;
 
-                                    context.Entry(newItem).State = EntityState.Modified;
+                                    item.TargetId.GuidId = sourceId;
+                                    item.TargetId.IType = Resource.ExternalId.IdType.Guid;
+                                    item.TargetId.SType = Resource.ExternalId.SystemType.EduApi;
+
+       
+                                    context.Entry(item).State = EntityState.Modified;
                                     context.SaveChanges();
 
 
@@ -201,7 +193,7 @@ namespace learnpoint_test_consoleApp
                             };
 
 
-                            context.Entry(newItem).State = EntityState.Added;
+                            context.Set<Resource>().Add(newItem);
                             context.SaveChanges();
 
 
@@ -302,7 +294,7 @@ namespace learnpoint_test_consoleApp
                                         };
 
 
-                                        context.Entry(newItem).State = EntityState.Modified;
+                                        context.Set<Resource>().Add(newItem);
                                         context.SaveChanges();
 
 
@@ -323,28 +315,22 @@ namespace learnpoint_test_consoleApp
                                     Guid sourceId;
                                     Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
-                                    var newItem = new Resource()
-                                    {
-                                        Id = localGroup.Id,
-                                        Type = "Course",
-                                        LastUpdated = DateTime.Now,
-                                        SourceId = new Resource.ExternalId()
-                                        {
-                                            IntId = group.Id,
-                                            IType = Resource.ExternalId.IdType.Int,
-                                            SType = Resource.ExternalId.SystemType.Learnpoint
-                                        },
-                                        TargetId = new Resource.ExternalId()
-                                        {
-                                            GuidId = sourceId,
-                                            IType = Resource.ExternalId.IdType.Guid,
-                                            SType = Resource.ExternalId.SystemType.EduApi
-                                        },
-                                    };
+                                    var item = context.Resources.Single(r => r.Id == localGroup.Id);
+
+                                    item.LastUpdated = DateTime.Now;
+                                    item.SourceId.IntId = group.Id;
+                                    item.SourceId.IType = Resource.ExternalId.IdType.Int;
+                                    item.SourceId.SType = Resource.ExternalId.SystemType.Learnpoint;
+
+                                    item.TargetId.GuidId = sourceId;
+                                    item.TargetId.IType = Resource.ExternalId.IdType.Guid;
+                                    item.TargetId.SType = Resource.ExternalId.SystemType.EduApi;
 
 
-                                    context.Entry(newItem).State = EntityState.Modified;
+                                    context.Entry(item).State = EntityState.Modified;
                                     context.SaveChanges();
+
+
 
 
                                     Console.WriteLine($"Created: {message}");
@@ -391,7 +377,7 @@ namespace learnpoint_test_consoleApp
                                 };
 
 
-                                context.Entry(newItem).State = EntityState.Added;
+                                context.Set<Resource>().Add(newItem);
                                 context.SaveChanges();
 
 
@@ -470,7 +456,7 @@ namespace learnpoint_test_consoleApp
                             };
 
 
-                            context.Entry(newItem).State = EntityState.Added;
+                            context.Set<Resource>().Add(newItem);
                             context.SaveChanges();
 
 
@@ -507,27 +493,19 @@ namespace learnpoint_test_consoleApp
                                 Guid sourceId;
                                 Guid.TryParse(container["guid"]?.ToString(), out sourceId);
 
-                                var newItem = new Resource()
-                                {
-                                    Id = localUser.Id,
-                                    Type = "User",
-                                    LastUpdated = DateTime.Now,
-                                    SourceId = new Resource.ExternalId()
-                                    {
-                                        IntId = staffMember.Id,
-                                        IType = Resource.ExternalId.IdType.Int,
-                                        SType = Resource.ExternalId.SystemType.Learnpoint
-                                    },
-                                    TargetId = new Resource.ExternalId()
-                                    {
-                                        GuidId = sourceId,
-                                        IType = Resource.ExternalId.IdType.Guid,
-                                        SType = Resource.ExternalId.SystemType.EduApi
-                                    },
-                                };
+                                var item = context.Resources.Single(r => r.Id == localUser.Id);
+
+                                item.LastUpdated = DateTime.Now;
+                                item.SourceId.IntId = staffMember.Id;
+                                item.SourceId.IType = Resource.ExternalId.IdType.Int;
+                                item.SourceId.SType = Resource.ExternalId.SystemType.Learnpoint;
+
+                                item.TargetId.GuidId = sourceId;
+                                item.TargetId.IType = Resource.ExternalId.IdType.Guid;
+                                item.TargetId.SType = Resource.ExternalId.SystemType.EduApi;
 
 
-                                context.Entry(newItem).State = EntityState.Modified;
+                                context.Entry(item).State = EntityState.Modified;
                                 context.SaveChanges();
 
 
