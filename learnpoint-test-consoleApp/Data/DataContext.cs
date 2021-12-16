@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using learnpoint_test_consoleApp.Entities;
+﻿using learnpoint_test_consoleApp.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace learnpoint_test_consoleApp.Data
 {

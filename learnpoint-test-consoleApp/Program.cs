@@ -1,16 +1,15 @@
-﻿using System;
+﻿using EduDev.ClientLibrary.ApiModels;
+using learnpoint_test_consoleApp.Data;
+using learnpoint_test_consoleApp.Entities;
+using Microsoft.EntityFrameworkCore;
+using MvLpApi.ClientLibrary;
+using MvLpApi.ClientLibrary.ApiModels;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using EduDev.ClientLibrary.ApiModels;
-using MvLpApi.ClientLibrary;
-using MvLpApi.ClientLibrary.ApiModels;
-using Newtonsoft.Json.Linq;
-using learnpoint_test_consoleApp.Entities;
-using learnpoint_test_consoleApp.Data;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 
 namespace learnpoint_test_consoleApp
 {
@@ -147,7 +146,7 @@ namespace learnpoint_test_consoleApp
             }
         }
 
-       
+
 
         private static void FillGroups(string accessToken)
         {
@@ -202,7 +201,7 @@ namespace learnpoint_test_consoleApp
                                     message = UpdateCourse(targetCourse.Id, course);
 
                                     Console.WriteLine($"Created: {message}");
-               
+
                                 }
                                 else
                                 {
@@ -230,7 +229,7 @@ namespace learnpoint_test_consoleApp
 
         }
 
-        
+
 
         private static void FillStaffMembers(string accessToken)
         {
@@ -260,7 +259,7 @@ namespace learnpoint_test_consoleApp
 
                         if (localUser == null)
                         {
-                     
+
                             message = AddUser(user);
 
                             Guid targetId = ParseGuid(message);
@@ -338,7 +337,7 @@ namespace learnpoint_test_consoleApp
 
                             CourseMembership newCourseMembership = new CourseMembership()
                             {
-                                
+
                                 UserId = targetUser.Id,
                                 CourseId = targetCourse.Id,
                                 EnrolledDate = targetCourse.StartDate
@@ -459,28 +458,28 @@ namespace learnpoint_test_consoleApp
         private static void CreateResource(DataContext context, string type, Guid targetId, int sourceId)
         {
 
-                var newItem = new Resource()
+            var newItem = new Resource()
+            {
+                Id = Guid.NewGuid(),
+                Type = type,
+                LastUpdated = DateTime.Now,
+                SourceId = new Resource.ExternalId()
                 {
-                    Id = Guid.NewGuid(),
-                    Type = type,
-                    LastUpdated = DateTime.Now,
-                    SourceId = new Resource.ExternalId()
-                    {
-                        IntId = sourceId,
-                        IType = Resource.ExternalId.IdType.Int,
-                        SType = Resource.ExternalId.SystemType.Learnpoint
-                    },
-                    TargetId = new Resource.ExternalId()
-                    {
-                        GuidId = targetId,
-                        IType = Resource.ExternalId.IdType.Guid,
-                        SType = Resource.ExternalId.SystemType.EduApi
-                    },
-                };
+                    IntId = sourceId,
+                    IType = Resource.ExternalId.IdType.Int,
+                    SType = Resource.ExternalId.SystemType.Learnpoint
+                },
+                TargetId = new Resource.ExternalId()
+                {
+                    GuidId = targetId,
+                    IType = Resource.ExternalId.IdType.Guid,
+                    SType = Resource.ExternalId.SystemType.EduApi
+                },
+            };
 
-                context.Set<Resource>().Add(newItem);
-                context.SaveChanges();
-            
+            context.Set<Resource>().Add(newItem);
+            context.SaveChanges();
+
 
         }
 
