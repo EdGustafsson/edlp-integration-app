@@ -1,0 +1,22 @@
+{
+  "parameters": {
+    "apiBaseAddress": {
+      "value": "https://xxxxxxxxxxxxxxxxxxxx.azurewebsites.net/"
+    },
+    "tokenEndpointUri": {
+      "value": "https://xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.azurewebsites.net/connect/token"
+    },
+    "clientId": {
+      "value": "xxxxxxxxxxxxxxxxxxxx"
+    },
+    "clientSecret": {
+      "value": "secretsecre"
+    },
+    "requestedScopes": {
+      "value": "xxxxxxxxxxxxxxxxx.read xxxxxxxxxxxxxxxxx.mobilephone.read xxxxxxxxxxxxxxxxx.homeaddress.read"
+    },
+    "tenantIdentifier": {
+      "value": "xxxxxxxx"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "edlp-integration-app", "learnpoint-test-consoleApp\edlp-integration-app.csproj", "{C913DCEE-06F6-4FDB-B7EA-D265E001EBA0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B7158B2E-823D-4893-BA71-5774ABAE197E} = {B7158B2E-823D-4893-BA71-5774ABAE197E}
+		{883A6265-A183-49F5-AD4A-6D5121EB79D8} = {883A6265-A183-49F5-AD4A-6D5121EB79D8}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvLpApi.ClientLibrary", "MvLpApi.ClientLibrary\MvLpApi.ClientLibrary.csproj", "{B7158B2E-823D-4893-BA71-5774ABAE197E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EduDev.ClientLibrary", "EduDev.ClientLibrary\EduDev.ClientLibrary.csproj", "{883A6265-A183-49F5-AD4A-6D5121EB79D8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C913DCEE-06F6-4FDB-B7EA-D265E001EBA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C913DCEE-06F6-4FDB-B7EA-D265E001EBA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C913DCEE-06F6-4FDB-B7EA-D265E001EBA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C913DCEE-06F6-4FDB-B7EA-D265E001EBA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7158B2E-823D-4893-BA71-5774ABAE197E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7158B2E-823D-4893-BA71-5774ABAE197E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7158B2E-823D-4893-BA71-5774ABAE197E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7158B2E-823D-4893-BA71-5774ABAE197E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{883A6265-A183-49F5-AD4A-6D5121EB79D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{883A6265-A183-49F5-AD4A-6D5121EB79D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{883A6265-A183-49F5-AD4A-6D5121EB79D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{883A6265-A183-49F5-AD4A-6D5121EB79D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E9CAADF-B363-43A4-8B4A-5CB8DE5AB3D4}
+	EndGlobalSection
+EndGlobal

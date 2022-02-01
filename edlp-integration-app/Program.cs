@@ -11,7 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace learnpoint_test_consoleApp
+namespace edlp-integration-app
 {
     class Program
     {

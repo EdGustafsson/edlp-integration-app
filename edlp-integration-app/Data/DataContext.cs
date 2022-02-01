@@ -1,7 +1,7 @@
 ﻿using learnpoint_test_consoleApp.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace learnpoint_test_consoleApp.Data
+namespace edlp-integration-app.Data
 {
     public class DataContext : DbContext
     {

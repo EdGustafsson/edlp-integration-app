@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace learnpoint_test_consoleApp.Entities
+namespace edlp-integration-app.Entities
 {
     [Table("Resource")]
     public class Resource
